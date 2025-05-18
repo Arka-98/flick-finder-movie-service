@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Seat } from './schemas/seat.schema';
 import { Model, Types } from 'mongoose';
@@ -59,21 +63,10 @@ export class SeatsService {
     seatConfiguration: SeatConfigurationDto[],
   ) {
     try {
-      const { seatTypeIds, rowLabels } = seatConfiguration.reduce<{
-        seatTypeIds: string[];
-        rowLabels: string[];
-      }>(
-        (acc, config) => ({
-          seatTypeIds: [...new Set([...acc.seatTypeIds, config.seatTypeId])],
-          rowLabels: [...acc.rowLabels, config.rowLabel],
-        }),
-        { seatTypeIds: [], rowLabels: [] },
+      const seatTypeIds = seatConfiguration.reduce(
+        (acc, config) => [...new Set([...acc, config.seatTypeId])],
+        [],
       );
-
-      if (rowLabels.length !== new Set(rowLabels).size) {
-        throw new Error('Row labels must be unique');
-      }
-
       const totalSeatPositions = seatConfiguration.reduce(
         (acc, config) => acc + config.seatPositions.length,
         0,
@@ -83,7 +76,7 @@ export class SeatsService {
       );
 
       if (hall.totalSeats !== totalSeatPositions) {
-        throw new Error(
+        throw new BadRequestException(
           'The total number of seat numbers does not match the total number of rows',
         );
       }
