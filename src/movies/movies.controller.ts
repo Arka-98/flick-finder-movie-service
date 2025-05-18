@@ -20,6 +20,7 @@ import {
 import { GetMovieDto } from './dto/get-movie.dto';
 import { Types } from 'mongoose';
 import { CustomRequest, ParseObjectIdPipe } from '@flick-finder/common';
+import { GetShowtimeDto } from 'src/showtime/dto/get-showtime.dto';
 
 @ApiBearerAuth()
 @ApiTags('movies')
@@ -89,5 +90,20 @@ export class MoviesController {
   })
   deleteMovie(@Param('id', ParseObjectIdPipe) id: Types.ObjectId) {
     return this.moviesService.deleteMovie(id);
+  }
+
+  @Get(':id/showtimes')
+  @ApiOkResponse({
+    type: [GetShowtimeDto],
+    description: 'Get showtimes for a movie',
+  })
+  getShowtimesByMovieId(@Param('id', ParseObjectIdPipe) id: Types.ObjectId) {
+    return this.moviesService.getShowtimesByMovieId(id);
+  }
+
+  @Post(':id/showtimes')
+  @ApiNoContentResponse({ description: 'Create showtime for a movie' })
+  createShowtimeByMovieId(@Param('id', ParseObjectIdPipe) id: Types.ObjectId) {
+    return this.moviesService.createShowtimeByMovieId(id);
   }
 }

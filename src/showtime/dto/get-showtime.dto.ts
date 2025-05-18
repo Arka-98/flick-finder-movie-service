@@ -1,16 +1,16 @@
 import { IdAndTimestampDto } from '@flick-finder/common';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class GetMovieDto extends IdAndTimestampDto {
+export class GetShowtimeDto extends IdAndTimestampDto {
   @ApiProperty()
-  title: string;
+  movie: string;
 
   @ApiProperty()
-  year: number;
+  hall: string;
 
   @ApiProperty()
-  director: string;
+  showtime: string;
 
   @ApiProperty()
-  cast: string[];
+  availableSeats: number;
 }

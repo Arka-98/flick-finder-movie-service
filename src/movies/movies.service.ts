@@ -3,17 +3,17 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Movie } from './schemas/movie.schema';
 import { Model, Types } from 'mongoose';
 import { CreateMovieDto } from './dto/create-movie.dto';
+import { Showtime } from 'src/showtime/schemas/showtime.schema';
 
 @Injectable()
 export class MoviesService {
   constructor(
     @InjectModel(Movie.name) private readonly movieModel: Model<Movie>,
+    @InjectModel(Showtime.name) private readonly showtimeModel: Model<Showtime>,
   ) {}
 
   async createMovie(movie: CreateMovieDto) {
-    const createdMovie = new this.movieModel(movie);
-
-    return createdMovie.save();
+    return this.movieModel.create(movie);
   }
 
   async findMovieById(id: Types.ObjectId) {
@@ -40,5 +40,13 @@ export class MoviesService {
     }
 
     return deletedMovie;
+  }
+
+  getShowtimesByMovieId(movieId: Types.ObjectId) {
+    return this.showtimeModel.find({ movie: movieId });
+  }
+
+  createShowtimeByMovieId(movieId: Types.ObjectId) {
+    return this.showtimeModel.create({ movie: movieId });
   }
 }

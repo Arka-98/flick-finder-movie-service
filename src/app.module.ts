@@ -9,6 +9,7 @@ import { MoviesModule } from './movies/movies.module';
 import { TheatersModule } from './theaters/theaters.module';
 import { HallsModule } from './halls/halls.module';
 import { SeatsModule } from './seats/seats.module';
+import { ShowtimeModule } from './showtime/showtime.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { SeatsModule } from './seats/seats.module';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         uri: configService.get('MONGO_URI'),
+        dbName: configService.get('MONGO_DB_NAME'),
       }),
       inject: [ConfigService],
     }),
@@ -26,6 +28,7 @@ import { SeatsModule } from './seats/seats.module';
     SeatsModule,
     CommonModule,
     ConsumersModule,
+    ShowtimeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

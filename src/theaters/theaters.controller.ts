@@ -9,6 +9,7 @@ import {
   ParseArrayPipe,
   Patch,
   Post,
+  Request,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -21,7 +22,12 @@ import { TheatersService } from './theaters.service';
 import { CreateTheaterDto } from './dto/create-theater.dto';
 import { Types } from 'mongoose';
 import { GetTheaterDto } from './dto/get-theater.dto';
-import { ParseObjectIdPipe, Roles, RolesEnum } from '@flick-finder/common';
+import {
+  CustomRequest,
+  ParseObjectIdPipe,
+  Roles,
+  RolesEnum,
+} from '@flick-finder/common';
 import { CreateSeatTypesDto } from './dto/create-seat-types.dto';
 import { SeatTypeService } from './seat-type.service';
 
@@ -60,8 +66,14 @@ export class TheatersController {
     type: GetTheaterDto,
     description: 'Create new theater',
   })
-  async createTheater(@Body() createTheaterDto: CreateTheaterDto) {
-    return this.theatersService.createTheater(createTheaterDto);
+  async createTheater(
+    @Body() createTheaterDto: CreateTheaterDto,
+    @Request() requset: CustomRequest,
+  ) {
+    return this.theatersService.createTheater({
+      ...createTheaterDto,
+      createdBy: Types.ObjectId.createFromHexString(requset.user.sub),
+    });
   }
 
   @Patch(':id')
@@ -73,8 +85,12 @@ export class TheatersController {
   async updateTheater(
     @Param('id', ParseObjectIdPipe) id: Types.ObjectId,
     @Body() updateTheaterDto: CreateTheaterDto,
+    @Request() requset: CustomRequest,
   ) {
-    return this.theatersService.updateTheater(id, updateTheaterDto);
+    return this.theatersService.updateTheater(id, {
+      ...updateTheaterDto,
+      createdBy: Types.ObjectId.createFromHexString(requset.user.sub),
+    });
   }
 
   @Delete(':id')
