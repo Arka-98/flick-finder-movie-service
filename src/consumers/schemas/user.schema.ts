@@ -21,8 +21,8 @@ export class User
   @Prop()
   email: string;
 
-  @Prop({ type: Number })
-  phone: number;
+  @Prop({ type: String })
+  phone: string;
 
   @Prop({ enum: RolesEnum, default: 'customer' })
   role: RolesEnum;
