@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { CommonModule, LoggerMiddleware } from '@flick-finder/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ConsumersModule } from './consumers/user/user.module';
+import { UserConsumerModule } from './consumers/user/user.module';
 import { MoviesModule } from './movies/movies.module';
 import { TheatersModule } from './theaters/theaters.module';
 import { HallsModule } from './halls/halls.module';
@@ -27,7 +27,7 @@ import { ShowtimeModule } from './showtime/showtime.module';
     HallsModule,
     SeatsModule,
     CommonModule,
-    ConsumersModule,
+    UserConsumerModule,
     ShowtimeModule,
   ],
   controllers: [AppController],

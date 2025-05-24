@@ -1,11 +1,11 @@
 import { IUser, TOPICS } from '@flick-finder/common';
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { ConsumerService } from './user.service';
+import { UserConsumerService } from './user.service';
 
 @Controller('consumers')
-export class ConsumersController {
-  constructor(private readonly consumerService: ConsumerService) {}
+export class UserConsumerController {
+  constructor(private readonly consumerService: UserConsumerService) {}
 
   @MessagePattern(TOPICS.USER.CREATED)
   async handleUserCreated(@Payload() user: IUser) {

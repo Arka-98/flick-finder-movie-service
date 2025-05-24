@@ -12,9 +12,7 @@ export type UserDocument = HydratedDocument<User>;
     },
   },
 })
-export class User
-  implements Pick<IUser, 'name' | 'email' | 'phone' | 'role' | 'dob'>
-{
+export class User implements Pick<IUser, 'name' | 'email' | 'phone' | 'role'> {
   @Prop()
   name: string;
 
@@ -24,11 +22,8 @@ export class User
   @Prop({ type: String })
   phone: string;
 
-  @Prop({ enum: RolesEnum, default: 'customer' })
+  @Prop({ enum: RolesEnum, default: RolesEnum.CUSTOMER })
   role: RolesEnum;
-
-  @Prop({ type: Date })
-  dob: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
