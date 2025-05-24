@@ -19,24 +19,30 @@ async function bootstrap() {
     deepScanRoutes: true,
   });
   const configService = app.get(ConfigService);
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.KAFKA,
-    options: {
-      client: {
-        clientId: configService.get('KAFKA_CLIENT_ID'),
-        brokers: [configService.get('KAFKA_BROKER')],
-      },
-      consumer: {
-        groupId: configService.get('KAFKA_GROUP_ID'),
-      },
-      subscribe: {
-        fromBeginning: true,
+
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.connectMicroservice<MicroserviceOptions>(
+    {
+      transport: Transport.KAFKA,
+      options: {
+        client: {
+          clientId: configService.get('KAFKA_CLIENT_ID'),
+          brokers: [configService.get('KAFKA_BROKER')],
+        },
+        consumer: {
+          groupId: configService.get('KAFKA_GROUP_ID'),
+        },
+        subscribe: {
+          fromBeginning: true,
+        },
       },
     },
-  });
+    {
+      inheritAppConfig: true,
+    },
+  );
 
   SwaggerModule.setup('api/v1', app, document);
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
   await app.startAllMicroservices();
   await app.listen(configService.get('APP_PORT'));

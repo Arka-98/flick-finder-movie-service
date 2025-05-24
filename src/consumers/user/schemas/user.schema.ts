@@ -1,4 +1,4 @@
-import { IUser, RolesEnum } from '@flick-finder/common';
+import { IUserEvent, RolesEnum } from '@flick-finder/common';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
@@ -12,7 +12,7 @@ export type UserDocument = HydratedDocument<User>;
     },
   },
 })
-export class User implements Pick<IUser, 'name' | 'email' | 'phone' | 'role'> {
+export class User implements Omit<IUserEvent, '_id'> {
   @Prop()
   name: string;
 
