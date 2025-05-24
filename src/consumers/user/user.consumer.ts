@@ -1,7 +1,7 @@
 import { IUser, TOPICS } from '@flick-finder/common';
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { ConsumerService } from './consumer.service';
+import { ConsumerService } from './user.service';
 
 @Controller('consumers')
 export class ConsumersController {
