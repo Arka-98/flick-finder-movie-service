@@ -16,9 +16,6 @@ export class SeatType {
   @Prop()
   type: string;
 
-  @Prop()
-  price: number;
-
   @Prop({ type: SchemaTypes.ObjectId, ref: 'Theater' })
   theater: Theater;
 }
