@@ -26,6 +26,9 @@ export class Movie {
 
   @Prop({ default: false })
   approved: boolean;
+
+  @Prop({ type: Number })
+  duration: number;
 }
 
 export const MovieSchema = SchemaFactory.createForClass(Movie);
