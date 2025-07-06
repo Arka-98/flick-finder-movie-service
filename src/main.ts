@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { geKafkaMicroserviceOptions } from '@flick-finder/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -21,25 +22,12 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
-  app.connectMicroservice<MicroserviceOptions>(
-    {
-      transport: Transport.KAFKA,
-      options: {
-        client: {
-          clientId: configService.get('KAFKA_CLIENT_ID'),
-          brokers: [configService.get('KAFKA_BROKER')],
-        },
-        consumer: {
-          groupId: configService.get('KAFKA_GROUP_ID'),
-        },
-        subscribe: {
-          fromBeginning: true,
-        },
-      },
-    },
-    {
-      inheritAppConfig: true,
-    },
+  app.connectMicroservice(
+    geKafkaMicroserviceOptions(
+      configService.get('KAFKA_BROKER'),
+      configService.get('KAFKA_CLIENT_ID'),
+      configService.get('KAFKA_GROUP_ID'),
+    ),
   );
 
   SwaggerModule.setup('api/v1', app, document);
