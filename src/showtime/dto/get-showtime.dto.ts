@@ -10,7 +10,4 @@ export class GetShowtimeDto extends IdAndTimestampDto {
 
   @ApiProperty()
   showtime: string;
-
-  @ApiProperty()
-  availableSeats: number;
 }

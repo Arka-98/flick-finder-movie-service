@@ -16,10 +16,7 @@ export type SeatDocument = HydratedDocument<Seat>;
 })
 export class Seat {
   @Prop()
-  rowLabel: string;
-
-  @Prop()
-  seatPositions: number[];
+  seatLabel: string;
 
   @Prop({ type: SchemaTypes.ObjectId, ref: 'SeatType' })
   seatType: SeatType;

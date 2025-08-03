@@ -15,12 +15,14 @@ import {
   ApiBearerAuth,
   ApiNoContentResponse,
   ApiOkResponse,
+  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 import { GetMovieDto } from './dto/get-movie.dto';
 import { Types } from 'mongoose';
 import { CustomRequest, ParseObjectIdPipe } from '@flick-finder/common';
 import { GetShowtimeDto } from 'src/showtime/dto/get-showtime.dto';
+import { CreateShowtimeDto } from '@apps/showtime/dto/create-showtime.dto';
 
 @ApiBearerAuth()
 @ApiTags('movies')
@@ -102,8 +104,15 @@ export class MoviesController {
   }
 
   @Post(':id/showtimes')
+  @ApiParam({ name: 'id', type: String })
   @ApiNoContentResponse({ description: 'Create showtime for a movie' })
-  createShowtimeByMovieId(@Param('id', ParseObjectIdPipe) id: Types.ObjectId) {
-    return this.moviesService.createShowtimeByMovieId(id);
+  createShowtimeByMovieId(
+    @Param('id', ParseObjectIdPipe) movieId: Types.ObjectId,
+    @Body() createShowtimeDto: CreateShowtimeDto,
+  ) {
+    return this.moviesService.createShowtimeByMovieId(
+      movieId,
+      createShowtimeDto,
+    );
   }
 }

@@ -3,6 +3,7 @@ import {
   ArrayMinSize,
   IsArray,
   IsDateString,
+  IsNumber,
   IsString,
   MaxLength,
 } from 'class-validator';
@@ -20,6 +21,10 @@ export class CreateMovieDto {
   @IsString()
   @ApiProperty()
   director: string;
+
+  @IsNumber()
+  @ApiProperty({ title: 'Duration in minutes' })
+  duration: number;
 
   @IsArray()
   @ArrayMinSize(1)

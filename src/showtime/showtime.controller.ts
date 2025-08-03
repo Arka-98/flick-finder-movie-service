@@ -12,8 +12,8 @@ import { GetShowtimeDto } from './dto/get-showtime.dto';
 import { CreateSeatPricingDto } from './dto/create-seat-pricing.dto';
 
 @ApiBearerAuth()
-@ApiTags('showtime')
-@Controller('showtime')
+@ApiTags('showtimes')
+@Controller('showtimes')
 export class ShowtimeController {
   constructor(private readonly showtimeService: ShowtimeService) {}
 

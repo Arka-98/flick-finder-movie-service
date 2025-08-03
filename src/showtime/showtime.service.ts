@@ -5,6 +5,7 @@ import { Model, Types } from 'mongoose';
 import { CreateSeatPricingDto } from './dto/create-seat-pricing.dto';
 import { SeatPricing } from './schemas/seat-pricing.schema';
 import { SeatTypeService } from '@apps/theaters/seat-type.service';
+import { KafkaService, TOPICS } from '@flick-finder/common';
 
 @Injectable()
 export class ShowtimeService {
@@ -13,6 +14,7 @@ export class ShowtimeService {
     @InjectModel(SeatPricing.name)
     private readonly seatPricingModel: Model<SeatPricing>,
     private readonly seatTypeService: SeatTypeService,
+    private readonly kafkaService: KafkaService,
   ) {}
 
   getAllShowtimes() {
@@ -25,12 +27,12 @@ export class ShowtimeService {
 
   async addPriceForShowtime(
     showtimeId: Types.ObjectId,
-    seatPricingDto: CreateSeatPricingDto,
+    { seatTypeId, price }: CreateSeatPricingDto,
   ) {
     const [showtime, seatType] = await Promise.all([
       this.getShowtimeById(showtimeId),
       this.seatTypeService.getSeatTypeById(
-        Types.ObjectId.createFromHexString(seatPricingDto.seatTypeId),
+        Types.ObjectId.createFromHexString(seatTypeId),
       ),
     ]);
 
@@ -42,9 +44,17 @@ export class ShowtimeService {
       throw new NotFoundException('Seat type not found');
     }
 
-    return this.seatPricingModel.create({
-      ...seatPricingDto,
+    const seatPricing = await this.seatPricingModel.create({
+      seatType: Types.ObjectId.createFromHexString(seatTypeId),
+      price: Number(price),
       showtime: showtimeId,
     });
+
+    this.kafkaService.emit(TOPICS.SEAT_PRICING.CREATED, {
+      key: seatPricing.id,
+      value: seatPricing.toObject(),
+    });
+
+    return seatPricing;
   }
 }

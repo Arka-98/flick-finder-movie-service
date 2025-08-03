@@ -105,13 +105,13 @@ export class TheatersController {
 
   @Post(':id/seat-types')
   @ApiParam({ name: 'id', type: String })
-  @ApiBody({ type: [CreateSeatTypesDto] })
+  @ApiBody({ type: [String] })
   createSeatTypes(
-    @Body(new ParseArrayPipe({ items: CreateSeatTypesDto }))
-    createSeatTypesDto: CreateSeatTypesDto[],
+    @Body(new ParseArrayPipe({ items: String }))
+    seatTypes: string[],
     @Param('id', ParseObjectIdPipe) theaterId: Types.ObjectId,
   ) {
-    return this.theatersService.createSeatTypes(theaterId, createSeatTypesDto);
+    return this.theatersService.createSeatTypes(theaterId, seatTypes);
   }
 
   @Get(':id/seat-types')

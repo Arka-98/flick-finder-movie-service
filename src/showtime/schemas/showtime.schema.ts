@@ -22,9 +22,6 @@ export class Showtime {
 
   @Prop({ type: Date })
   showtime: Date;
-
-  @Prop({ type: Number })
-  availableSeats: number;
 }
 
 export const ShowtimeSchema = SchemaFactory.createForClass(Showtime);
