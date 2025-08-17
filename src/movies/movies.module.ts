@@ -10,7 +10,7 @@ import { KafkaModule } from '@flick-finder/common';
   imports: [
     MongooseModule.forFeature([{ name: Movie.name, schema: MovieSchema }]),
     ShowtimeModule,
-    KafkaModule
+    KafkaModule,
   ],
   controllers: [MoviesController],
   providers: [MoviesService],

@@ -5,7 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Showtime, ShowtimeSchema } from './schemas/showtime.schema';
 import { SeatPricing, SeatPricingSchema } from './schemas/seat-pricing.schema';
 import { TheatersModule } from '@apps/theaters/theaters.module';
-import { KafkaModule } from '@flick-finder/common';
+import { KafkaModule, StripeModule } from '@flick-finder/common';
 
 @Module({
   imports: [
@@ -15,6 +15,7 @@ import { KafkaModule } from '@flick-finder/common';
     ]),
     TheatersModule,
     KafkaModule,
+    StripeModule,
   ],
   controllers: [ShowtimeController],
   providers: [ShowtimeService],

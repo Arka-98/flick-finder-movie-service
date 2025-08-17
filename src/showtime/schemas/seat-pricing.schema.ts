@@ -22,6 +22,15 @@ export class SeatPricing {
 
   @Prop({ type: Number })
   price: number;
+
+  @Prop({ type: String })
+  stripePriceId: string;
+
+  @Prop({ type: String })
+  stripeProductId: string;
+
+  @Prop({ type: String })
+  active: boolean;
 }
 
 export const SeatPricingSchema = SchemaFactory.createForClass(SeatPricing);

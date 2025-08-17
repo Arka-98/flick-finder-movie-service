@@ -5,7 +5,7 @@ import { Model, Types } from 'mongoose';
 import { CreateSeatPricingDto } from './dto/create-seat-pricing.dto';
 import { SeatPricing } from './schemas/seat-pricing.schema';
 import { SeatTypeService } from '@apps/theaters/seat-type.service';
-import { KafkaService, TOPICS } from '@flick-finder/common';
+import { KafkaService, StripeService, TOPICS } from '@flick-finder/common';
 
 @Injectable()
 export class ShowtimeService {
@@ -15,6 +15,7 @@ export class ShowtimeService {
     private readonly seatPricingModel: Model<SeatPricing>,
     private readonly seatTypeService: SeatTypeService,
     private readonly kafkaService: KafkaService,
+    private readonly stripeService: StripeService,
   ) {}
 
   getAllShowtimes() {
@@ -22,7 +23,7 @@ export class ShowtimeService {
   }
 
   getShowtimeById(showtimeId: Types.ObjectId) {
-    return this.showtimeModel.findById(showtimeId);
+    return this.showtimeModel.findById(showtimeId).populate('movie');
   }
 
   async addPriceForShowtime(
@@ -48,6 +49,20 @@ export class ShowtimeService {
       seatType: Types.ObjectId.createFromHexString(seatTypeId),
       price: Number(price),
       showtime: showtimeId,
+      active: false,
+    });
+    const { product, price: stripePrice } =
+      await this.stripeService.createProductAndPrice(
+        {
+          name: `Movie: ${showtime.movie.title} - Seat Type: ${seatType.type} - Showtime: ${showtime.showtime.toString()}`,
+        },
+        { currency: 'inr', unit_amount: Number(price) },
+      );
+
+    await this.seatPricingModel.findByIdAndUpdate(seatPricing.id, {
+      stripePriceId: stripePrice.id,
+      stripeProductId: product.id,
+      active: true,
     });
 
     this.kafkaService.emit(TOPICS.SEAT_PRICING.CREATED, {
