@@ -26,7 +26,7 @@ import { ShowtimeModule } from './showtime/showtime.module';
     TheatersModule,
     HallsModule,
     SeatsModule,
-    CommonModule,
+    CommonModule.register(),
     UserConsumerModule,
     ShowtimeModule,
   ],
